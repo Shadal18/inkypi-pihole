@@ -9,7 +9,7 @@ _Pi-hole Dashboard_ is a plugin for [InkyPi](https://github.com/fatihak/InkyPi) 
 Use the InkyPi plugin installer with the plugin ID and this repository URL, following the install pattern shown by the official InkyPi plugin template.
 
 ```bash
-inkypi plugin install pihole_dashboard [https://github.com/shadal18/inkypi-pihole-dashboard](https://github.com/shadal18/inkypi-pihole-dashboard)
+inkypi plugin install pihole_dashboard [https://github.com/shadal18/inkypi-pihole](https://github.com/shadal18/inkypi-pihole)
 ```
 
 ## Update
@@ -78,7 +78,7 @@ The plugin settings page lets you customize:
 
 GitHub repository:
 
-[https://github.com/shadal18/inkypi-pihole-dashboard](https://github.com/shadal18/inkypi-pihole-dashboard)
+[https://github.com/shadal18/inkypi-pihole](https://github.com/shadal18/inkypi-pihole)
 
 ## Screenshots
 
