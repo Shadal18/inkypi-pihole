@@ -1,0 +1,919 @@
+<style>
+  :root {
+    --ag-bg: var(--background-color, var(--color-background, #f5f7fb));
+    --ag-bg-soft: var(--card-background-secondary, var(--color-surface-2, #eef2f7));
+    --ag-panel: var(--card-background, var(--color-surface, #ffffff));
+    --ag-panel-2: var(--card-background-hover, var(--color-surface-2, #f8fafc));
+    --ag-border: var(--border-color, rgba(15, 23, 42, 0.12));
+    --ag-border-strong: var(--border-color-strong, rgba(15, 23, 42, 0.18));
+    --ag-text: var(--text-primary, var(--color-text, #0f172a));
+    --ag-text-muted: var(--text-secondary, var(--color-text-secondary, #475569));
+    --ag-text-soft: var(--text-muted, #64748b);
+    --ag-primary: var(--accent-color, #14b8a6);
+    --ag-primary-strong: var(--accent-color-hover, #0f766e);
+    --ag-success: var(--success-color, #22c55e);
+    --ag-warning: var(--warning-color, #f59e0b);
+    --ag-danger: var(--danger-color, #ef4444);
+    --ag-info: var(--info-color, #3b82f6);
+    --ag-shadow-sm: 0 8px 24px rgba(15, 23, 42, 0.08);
+    --ag-shadow-lg: 0 18px 50px rgba(15, 23, 42, 0.12);
+    --ag-radius-xl: 18px;
+    --ag-radius-lg: 14px;
+    --ag-radius-md: 12px;
+    --ag-radius-sm: 10px;
+    --ag-gap: 16px;
+  }
+
+  html.dark,
+  body.dark,
+  [data-theme="dark"],
+  html[data-theme="dark"] {
+    --ag-bg: var(--background-color, var(--color-background, #0f172a));
+    --ag-bg-soft: var(--card-background-secondary, var(--color-surface-2, #162033));
+    --ag-panel: var(--card-background, var(--color-surface, #111827));
+    --ag-panel-2: var(--card-background-hover, var(--color-surface-2, #172033));
+    --ag-border: var(--border-color, rgba(255, 255, 255, 0.1));
+    --ag-border-strong: var(--border-color-strong, rgba(255, 255, 255, 0.16));
+    --ag-text: var(--text-primary, var(--color-text, #f8fafc));
+    --ag-text-muted: var(--text-secondary, var(--color-text-secondary, #cbd5e1));
+    --ag-text-soft: var(--text-muted, #94a3b8);
+    --ag-shadow-sm: 0 10px 28px rgba(0, 0, 0, 0.22);
+    --ag-shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.34);
+  }
+
+  .pihole-settings-container {
+    width: 100%;
+    box-sizing: border-box;
+    color: var(--ag-text);
+  }
+
+  .ph-shell {
+    display: grid;
+    gap: 18px;
+    margin-top: 8px;
+  }
+
+  .ph-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--ag-radius-xl);
+    border: 1px solid var(--ag-border);
+    background:
+      radial-gradient(circle at top right, color-mix(in srgb, var(--ag-primary) 16%, transparent), transparent 34%),
+      radial-gradient(circle at bottom left, color-mix(in srgb, var(--ag-info) 12%, transparent), transparent 30%),
+      linear-gradient(180deg, color-mix(in srgb, var(--ag-panel) 92%, var(--ag-bg-soft) 8%), var(--ag-panel-2));
+    box-shadow: var(--ag-shadow-sm);
+    padding: 22px 22px 18px;
+  }
+
+  .ph-hero-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .ph-hero-copy {
+    min-width: 260px;
+    flex: 1 1 520px;
+  }
+
+  .ph-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ag-primary) 14%, transparent);
+    color: var(--ag-primary);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    border: 1px solid color-mix(in srgb, var(--ag-primary) 22%, transparent);
+  }
+
+  .ph-hero h2 {
+    margin: 0;
+    color: var(--ag-text);
+    font-size: 28px;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .ph-hero p {
+    margin: 10px 0 0;
+    max-width: 68ch;
+    color: var(--ag-text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .ph-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .ph-metric {
+    border: 1px solid var(--ag-border);
+    border-radius: var(--ag-radius-lg);
+    background: color-mix(in srgb, var(--ag-panel) 92%, var(--ag-bg) 8%);
+    padding: 14px 14px 12px;
+    min-width: 0;
+    box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 22%, transparent);
+  }
+
+  .ph-metric-label {
+    color: var(--ag-text-soft);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .ph-metric-value {
+    color: var(--ag-text);
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .ph-metric-sub {
+    color: var(--ag-text-muted);
+    font-size: 12px;
+    margin-top: 6px;
+  }
+
+  .ph-section {
+    border: 1px solid var(--ag-border);
+    border-radius: var(--ag-radius-xl);
+    background: linear-gradient(180deg, var(--ag-panel), var(--ag-panel-2));
+    box-shadow: var(--ag-shadow-sm);
+    overflow: hidden;
+  }
+
+  .ph-section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--ag-border);
+  }
+
+  .ph-section-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    border: 1px solid var(--ag-border);
+    background: color-mix(in srgb, var(--ag-bg-soft) 65%, var(--ag-panel) 35%);
+  }
+
+  .ph-section-copy {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ph-section-title {
+    color: var(--ag-text);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .ph-section-subtitle {
+    color: var(--ag-text-muted);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  .ph-section-body {
+    padding: 18px 20px 20px;
+  }
+
+  .ph-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .ph-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ph-field {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .ph-label {
+    color: var(--ag-text-soft);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .ph-input,
+  .pihole-settings-container input[type="text"],
+  .pihole-settings-container input[type="password"],
+  .pihole-settings-container input[type="number"],
+  .pihole-settings-container input[type="url"],
+  .pihole-settings-container select {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 14px;
+    border-radius: 12px;
+    border: 1px solid var(--ag-border);
+    background: var(--ag-panel);
+    color: var(--ag-text);
+    outline: none;
+    box-sizing: border-box;
+    box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 14%, transparent);
+  }
+
+  .ph-input::placeholder,
+  .pihole-settings-container input::placeholder {
+    color: var(--ag-text-soft);
+    opacity: 1;
+  }
+
+  .ph-input:focus,
+  .pihole-settings-container input:focus,
+  .pihole-settings-container select:focus {
+    border-color: color-mix(in srgb, var(--ag-primary) 45%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--ag-primary) 14%, transparent);
+  }
+
+  .ph-note {
+    margin: 0;
+    color: var(--ag-text-muted);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .ph-choice-grid,
+  .ph-toggle-grid,
+  .ph-color-grid {
+    display: grid;
+    gap: 12px;
+  }
+
+  .ph-choice-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .ph-toggle-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .ph-option-card,
+  .ph-toggle-card,
+  .ph-color-card {
+    border: 1px solid var(--ag-border);
+    border-radius: var(--ag-radius-lg);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--ag-panel) 96%, #fff 4%),
+      color-mix(in srgb, var(--ag-panel-2) 96%, var(--ag-bg) 4%)
+    );
+    padding: 14px;
+    box-shadow: 0 1px 0 color-mix(in srgb, #fff 16%, transparent);
+    color: var(--ag-text);
+  }
+
+  .ph-option-card label,
+  .ph-toggle-card label {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    cursor: pointer;
+    margin: 0;
+  }
+
+  .ph-option-card input[type="radio"],
+  .ph-toggle-card input[type="checkbox"] {
+    margin-top: 2px;
+    accent-color: var(--ag-primary);
+    flex-shrink: 0;
+  }
+
+  .ph-option-title,
+  .ph-color-title,
+  .ph-toggle-title {
+    color: var(--ag-text);
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+
+  .ph-option-copy,
+  .ph-color-copy,
+  .ph-toggle-copy {
+    color: var(--ag-text-muted);
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .ph-color-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .ph-color-card input[type="color"] {
+    width: 54px;
+    min-width: 54px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid var(--ag-border);
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .ph-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .ph-btn,
+  .ph-btn:visited {
+    appearance: none;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    min-height: 38px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+      transform 0.16s ease,
+      background 0.16s ease,
+      border-color 0.16s ease,
+      opacity 0.16s ease,
+      box-shadow 0.16s ease;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .ph-btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .ph-btn-secondary {
+    background: color-mix(in srgb, var(--ag-info) 10%, var(--ag-panel));
+    border-color: color-mix(in srgb, var(--ag-info) 22%, transparent);
+    color: var(--ag-info);
+  }
+
+  .ph-link-card {
+    border: 1px solid var(--ag-border);
+    border-radius: var(--ag-radius-lg);
+    background: linear-gradient(180deg, var(--ag-panel), var(--ag-panel-2));
+    box-shadow: var(--ag-shadow-sm);
+    padding: 16px 20px;
+  }
+
+  .ph-link-card a {
+    color: var(--ag-primary);
+    text-decoration: none;
+    font-weight: 700;
+    word-break: break-word;
+  }
+
+  .ph-link-card a:hover,
+  .ph-link-card a:focus-visible {
+    text-decoration: underline;
+    outline: none;
+  }
+
+  .ph-link-help {
+    margin-top: 8px;
+    color: var(--ag-text-muted);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .floatingchat-container-wrap,
+  .floatingchat-container-wrap-mobi {
+    left: unset !important;
+    right: 16px !important;
+    bottom: 16px !important;
+  }
+
+  .floating-chat-kofi-popup-iframe {
+    left: unset !important;
+    right: 16px !important;
+    bottom: 76px !important;
+  }
+
+  @media (max-width: 920px) {
+    .ph-grid-2,
+    .ph-metrics {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .ph-hero {
+      padding: 18px;
+    }
+
+    .ph-hero h2 {
+      font-size: 22px;
+    }
+
+    .ph-section-header {
+      padding: 16px;
+    }
+
+    .ph-section-body,
+    .ph-link-card {
+      padding: 16px;
+    }
+
+    .ph-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .ph-btn,
+    .ph-btn:visited {
+      width: 100%;
+    }
+
+    .ph-color-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<div class="pihole-settings-container">
+  <input type="hidden" name="plugin_id" value="pihole" />
+
+  <div class="ph-shell">
+    <section class="ph-hero">
+      <div class="ph-hero-top">
+        <div class="ph-hero-copy">
+          <div class="ph-eyebrow">Pi-hole</div>
+          <h2>Connection, thresholds, and display controls for your dashboard render.</h2>
+          <p>
+            Configure the Pi-hole endpoint, tune what appears on the e-paper dashboard, and apply color presets that
+            work better on 6-color Waveshare displays without fighting InkyPi's light and dark theme.
+          </p>
+        </div>
+      </div>
+
+      <div class="ph-metrics">
+        <div class="ph-metric">
+          <div class="ph-metric-label">Layout</div>
+          <div class="ph-metric-value" id="metric-layout">Full</div>
+          <div class="ph-metric-sub">Dashboard or compact view</div>
+        </div>
+        <div class="ph-metric">
+          <div class="ph-metric-label">Privacy</div>
+          <div class="ph-metric-value" id="metric-privacy">Open</div>
+          <div class="ph-metric-sub">Mask clients and domains if needed</div>
+        </div>
+        <div class="ph-metric">
+          <div class="ph-metric-label">Color profile</div>
+          <div class="ph-metric-value" id="metric-color">6-color</div>
+          <div class="ph-metric-sub">Accent mapping for Waveshare panels</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ph-section">
+      <div class="ph-section-header">
+        <span class="ph-section-icon" aria-hidden="true">🔌</span>
+        <div class="ph-section-copy">
+          <div class="ph-section-title">Connection</div>
+          <div class="ph-section-subtitle">Point the plugin at your Pi-hole instance.</div>
+        </div>
+      </div>
+      <div class="ph-section-body">
+        <div class="ph-grid">
+          <div class="ph-field">
+            <label class="ph-label" for="host">Pi-hole URL</label>
+            <input type="text" id="host" name="host" class="ph-input" placeholder="http://pi.hole" autocomplete="off" />
+            <p class="ph-note">Use the base URL only. The plugin handles the API path automatically.</p>
+          </div>
+
+          <div class="ph-field">
+            <label class="ph-label" for="api_token">App password</label>
+            <input
+              type="password"
+              id="api_token"
+              name="api_token"
+              class="ph-input"
+              placeholder="Pi-hole app password (Settings → Web Interface/API)"
+              autocomplete="new-password"
+            />
+            <p class="ph-note">
+              Pi-hole 6+ uses session-based auth. Enter your app password here, not a legacy static token.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ph-section">
+      <div class="ph-section-header">
+        <span class="ph-section-icon" aria-hidden="true">🧭</span>
+        <div class="ph-section-copy">
+          <div class="ph-section-title">Layout and thresholds</div>
+          <div class="ph-section-subtitle">Control density and when visual warnings begin.</div>
+        </div>
+      </div>
+      <div class="ph-section-body">
+        <div class="ph-grid">
+          <div class="ph-choice-grid">
+            <div class="ph-option-card">
+              <label>
+                <input type="radio" name="layout_mode" value="dashboard" />
+                <span>
+                  <div class="ph-option-title">Dashboard</div>
+                  <div class="ph-option-copy">Full layout with chart, clients, and recent queries.</div>
+                </span>
+              </label>
+            </div>
+
+            <div class="ph-option-card">
+              <label>
+                <input type="radio" name="layout_mode" value="compact" />
+                <span>
+                  <div class="ph-option-title">Compact</div>
+                  <div class="ph-option-copy">Tighter arrangement for smaller or portrait displays.</div>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="ph-grid ph-grid-2">
+            <div class="ph-field">
+              <label class="ph-label" for="warning_threshold">Warning threshold (%)</label>
+              <input
+                type="number"
+                id="warning_threshold"
+                name="warning_threshold"
+                min="1"
+                max="100"
+                step="1"
+                class="ph-input"
+                placeholder="10"
+              />
+            </div>
+
+            <div class="ph-field">
+              <label class="ph-label" for="alert_threshold">Alert threshold (%)</label>
+              <input
+                type="number"
+                id="alert_threshold"
+                name="alert_threshold"
+                min="1"
+                max="100"
+                step="1"
+                class="ph-input"
+                placeholder="25"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ph-section">
+      <div class="ph-section-header">
+        <span class="ph-section-icon" aria-hidden="true">📊</span>
+        <div class="ph-section-copy">
+          <div class="ph-section-title">Display sections</div>
+          <div class="ph-section-subtitle">Choose what appears on the rendered dashboard.</div>
+        </div>
+      </div>
+      <div class="ph-section-body">
+        <div class="ph-toggle-grid">
+          <div class="ph-toggle-card">
+            <label>
+              <input type="checkbox" name="show_status" value="true" />
+              <span>
+                <div class="ph-toggle-title">Status badge</div>
+                <div class="ph-toggle-copy">Show whether blocking is enabled.</div>
+              </span>
+            </label>
+          </div>
+          <input type="hidden" name="show_status" value="false" />
+
+          <div class="ph-toggle-card">
+            <label>
+              <input type="checkbox" name="show_totals" value="true" />
+              <span>
+                <div class="ph-toggle-title">Totals row</div>
+                <div class="ph-toggle-copy">Show key counters and percentages.</div>
+              </span>
+            </label>
+          </div>
+          <input type="hidden" name="show_totals" value="false" />
+
+          <div class="ph-toggle-card">
+            <label>
+              <input type="checkbox" name="show_clients" value="true" />
+              <span>
+                <div class="ph-toggle-title">Top clients</div>
+                <div class="ph-toggle-copy">Show the busiest clients seen by Pi-hole.</div>
+              </span>
+            </label>
+          </div>
+          <input type="hidden" name="show_clients" value="false" />
+
+          <div class="ph-toggle-card">
+            <label>
+              <input type="checkbox" name="show_queries" value="true" />
+              <span>
+                <div class="ph-toggle-title">Recent queries</div>
+                <div class="ph-toggle-copy">Show the latest query activity list.</div>
+              </span>
+            </label>
+          </div>
+          <input type="hidden" name="show_queries" value="false" />
+
+          <div class="ph-toggle-card">
+            <label>
+              <input type="checkbox" name="show_chart" value="true" />
+              <span>
+                <div class="ph-toggle-title">Activity chart</div>
+                <div class="ph-toggle-copy">Show recent activity as a compact chart.</div>
+              </span>
+            </label>
+          </div>
+          <input type="hidden" name="show_chart" value="false" />
+
+          <div class="ph-toggle-card">
+            <label>
+              <input type="checkbox" name="show_destinations" value="true" />
+              <span>
+                <div class="ph-toggle-title">Domains and upstreams</div>
+                <div class="ph-toggle-copy">Show top destinations and upstream resolver details.</div>
+              </span>
+            </label>
+          </div>
+          <input type="hidden" name="show_destinations" value="false" />
+        </div>
+      </div>
+    </section>
+
+    <section class="ph-section">
+      <div class="ph-section-header">
+        <span class="ph-section-icon" aria-hidden="true">🕶️</span>
+        <div class="ph-section-copy">
+          <div class="ph-section-title">Privacy and palette</div>
+          <div class="ph-section-subtitle">Mask sensitive info and tune accent colors.</div>
+        </div>
+      </div>
+      <div class="ph-section-body">
+        <div class="ph-grid">
+          <div class="ph-toggle-grid">
+            <div class="ph-toggle-card">
+              <label>
+                <input type="checkbox" name="mask_client_names" value="true" />
+                <span>
+                  <div class="ph-toggle-title">Mask client names</div>
+                  <div class="ph-toggle-copy">Replace client names and addresses with generic labels.</div>
+                </span>
+              </label>
+            </div>
+            <input type="hidden" name="mask_client_names" value="false" />
+
+            <div class="ph-toggle-card">
+              <label>
+                <input type="checkbox" name="mask_domains" value="true" />
+                <span>
+                  <div class="ph-toggle-title">Mask domains</div>
+                  <div class="ph-toggle-copy">Hide domain names on the display output.</div>
+                </span>
+              </label>
+            </div>
+            <input type="hidden" name="mask_domains" value="false" />
+
+            <div class="ph-toggle-card">
+              <label>
+                <input type="checkbox" name="prefer_6color_profile" value="true" />
+                <span>
+                  <div class="ph-toggle-title">Force 6-color accent profile</div>
+                  <div class="ph-toggle-copy">Keep colors compatible with 6-color Waveshare panels.</div>
+                </span>
+              </label>
+            </div>
+            <input type="hidden" name="prefer_6color_profile" value="false" />
+          </div>
+
+          <p class="ph-note">Use masking for shared dashboards or public-facing displays.</p>
+
+          <div class="ph-color-grid">
+            <div class="ph-color-card">
+              <div>
+                <div class="ph-color-title">Panel ink</div>
+                <div class="ph-color-copy">Text and border color on the rendered card.</div>
+              </div>
+              <input type="color" id="accent_panel" name="accent_panel" value="#000000" />
+            </div>
+
+            <div class="ph-color-card">
+              <div>
+                <div class="ph-color-title">Info blue</div>
+                <div class="ph-color-copy">Traffic bars and calm highlight color.</div>
+              </div>
+              <input type="color" id="accent_info" name="accent_info" value="#0000ff" />
+            </div>
+
+            <div class="ph-color-card">
+              <div>
+                <div class="ph-color-title">Alert red</div>
+                <div class="ph-color-copy">Blocked traffic and warning emphasis.</div>
+              </div>
+              <input type="color" id="accent_alert" name="accent_alert" value="#ff0000" />
+            </div>
+
+            <div class="ph-color-card">
+              <div>
+                <div class="ph-color-title">Warning yellow</div>
+                <div class="ph-color-copy">Threshold state and hot-bar highlight.</div>
+              </div>
+              <input type="color" id="accent_warn" name="accent_warn" value="#ffcc00" />
+            </div>
+
+            <div class="ph-color-card">
+              <div>
+                <div class="ph-color-title">Healthy green</div>
+                <div class="ph-color-copy">Enabled state and healthy protection color.</div>
+              </div>
+              <input type="color" id="accent_ok" name="accent_ok" value="#008000" />
+            </div>
+          </div>
+
+          <div class="ph-actions">
+            <button type="button" class="ph-btn ph-btn-secondary" data-preset="waveshare">Waveshare ACeP</button>
+            <button type="button" class="ph-btn ph-btn-secondary" data-preset="high-contrast">High contrast</button>
+            <button type="button" class="ph-btn ph-btn-secondary" data-preset="soft-paper">Soft paper</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ph-link-card">
+      <a href="https://github.com/shadal18/inkypi-pihole" target="_blank" rel="noopener noreferrer"
+        >github.com/shadal18/inkypi-pihole</a
+      >
+      <div class="ph-link-help">Setup help, updates, release notes, and source code.</div>
+    </section>
+  </div>
+</div>
+
+<script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const defaults = {
+      host: "",
+      api_token: "",
+      layout_mode: "dashboard",
+      warning_threshold: "10",
+      alert_threshold: "25",
+      show_status: "true",
+      show_totals: "true",
+      show_clients: "true",
+      show_queries: "true",
+      show_chart: "true",
+      show_destinations: "false",
+      mask_client_names: "false",
+      mask_domains: "false",
+      prefer_6color_profile: "true",
+      accent_panel: "#000000",
+      accent_info: "#0000ff",
+      accent_alert: "#ff0000",
+      accent_warn: "#ffcc00",
+      accent_ok: "#008000",
+    }
+
+    const presetMap = {
+      waveshare: {
+        accent_panel: "#000000",
+        accent_info: "#0000ff",
+        accent_alert: "#ff0000",
+        accent_warn: "#ffcc00",
+        accent_ok: "#008000",
+      },
+      "high-contrast": {
+        accent_panel: "#000000",
+        accent_info: "#0033cc",
+        accent_alert: "#cc0000",
+        accent_warn: "#ffb800",
+        accent_ok: "#006b2d",
+      },
+      "soft-paper": {
+        accent_panel: "#1f2937",
+        accent_info: "#3b82f6",
+        accent_alert: "#ef4444",
+        accent_warn: "#eab308",
+        accent_ok: "#22c55e",
+      },
+    }
+
+    const settings =
+      typeof loadPluginSettings !== "undefined" && loadPluginSettings && typeof pluginSettings !== "undefined"
+        ? { ...defaults, ...pluginSettings }
+        : { ...defaults }
+
+    const assignValue = (id, value) => {
+      const el = document.getElementById(id)
+      if (el) el.value = value
+    }
+
+    const setChecked = (name, value) => {
+      const field = document.querySelector(`input[type="checkbox"][name="${name}"]`)
+      if (field) field.checked = String(value).toLowerCase() === "true"
+    }
+
+    const refreshMetrics = () => {
+      const mode = document.querySelector('input[name="layout_mode"]:checked')?.value || "dashboard"
+      const maskClients = document.querySelector('input[name="mask_client_names"]')?.checked
+      const maskDomains = document.querySelector('input[name="mask_domains"]')?.checked
+      const use6 = document.querySelector('input[name="prefer_6color_profile"]')?.checked
+
+      const layoutMetric = document.getElementById("metric-layout")
+      const privacyMetric = document.getElementById("metric-privacy")
+      const colorMetric = document.getElementById("metric-color")
+
+      if (layoutMetric) layoutMetric.textContent = mode === "compact" ? "Compact" : "Full"
+      if (privacyMetric) privacyMetric.textContent = maskClients || maskDomains ? "Masked" : "Open"
+      if (colorMetric) colorMetric.textContent = use6 ? "6-color" : "Custom"
+    }
+
+    assignValue("host", settings.host || defaults.host)
+    assignValue("api_token", settings.api_token || defaults.api_token)
+    assignValue("warning_threshold", settings.warning_threshold || defaults.warning_threshold)
+    assignValue("alert_threshold", settings.alert_threshold || defaults.alert_threshold)
+    assignValue("accent_panel", settings.accent_panel || defaults.accent_panel)
+    assignValue("accent_info", settings.accent_info || defaults.accent_info)
+    assignValue("accent_alert", settings.accent_alert || defaults.accent_alert)
+    assignValue("accent_warn", settings.accent_warn || defaults.accent_warn)
+    assignValue("accent_ok", settings.accent_ok || defaults.accent_ok)
+
+    document.querySelectorAll('input[name="layout_mode"]').forEach((radio) => {
+      radio.checked = radio.value === (settings.layout_mode || defaults.layout_mode)
+      radio.addEventListener("change", refreshMetrics)
+    })
+    ;[
+      "show_status",
+      "show_totals",
+      "show_clients",
+      "show_queries",
+      "show_chart",
+      "show_destinations",
+      "mask_client_names",
+      "mask_domains",
+      "prefer_6color_profile",
+    ].forEach((key) => {
+      setChecked(key, settings[key] ?? defaults[key])
+      const field = document.querySelector(`input[type="checkbox"][name="${key}"]`)
+      if (field) field.addEventListener("change", refreshMetrics)
+    })
+
+    document.querySelectorAll("[data-preset]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const preset = presetMap[button.dataset.preset]
+        if (!preset) return
+        Object.entries(preset).forEach(([key, value]) => assignValue(key, value))
+      })
+    })
+
+    refreshMetrics()
+
+    if (typeof kofiWidgetOverlay !== "undefined") {
+      kofiWidgetOverlay.draw("shadal", {
+        type: "floating-chat",
+        "floating-chat.donateButton.text": "More coffee",
+        "floating-chat.donateButton.background-color": "#00b9fe",
+        "floating-chat.donateButton.text-color": "#fff",
+      })
+    }
+  })
+</script>

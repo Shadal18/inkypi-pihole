@@ -1,0 +1,6 @@
+{
+  "display_name": "Pi-hole",
+  "id": "pihole",
+  "class": "PiHole",
+  "repository": "https://github.com/shadal18/inkypi-pihole"
+}

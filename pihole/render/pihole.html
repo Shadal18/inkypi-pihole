@@ -1,0 +1,156 @@
+{% extends "plugin.html" %} {% block content %}
+<style>
+  :root {
+      --ink-panel: {{ accent_panel | default('#000000') }};
+      --ink-info: {{ accent_info | default('#0000ff') }};
+      --ink-alert: {{ accent_alert | default('#ff0000') }};
+      --ink-warn: {{ accent_warn | default('#ffcc00') }};
+      --ink-ok: {{ accent_ok | default('#008000') }};
+      --paper: #ffffff;
+  }
+</style>
+
+<div class="php-frame status-{{ status_level }} mode-{{ layout_mode | default('dashboard') }}">
+  <header class="php-hero">
+    <div class="php-hero-copy">
+      <p class="php-kicker">Pi-hole</p>
+      <h1 class="php-title">Network-wide ad blocking</h1>
+      <p class="php-subtitle">{{ host }}</p>
+    </div>
+
+    <div class="php-hero-meta">
+      {% if show_status %}
+      <div class="php-status-chip {{ 'online' if snapshot.blocking_enabled else 'offline' }}">
+        <span class="php-status-dot"></span>
+        <span>
+          {% if snapshot.blocking_enabled is sameas true %} Blocking active {% elif snapshot.blocking_enabled is sameas
+          false %} Blocking disabled {% else %} Status unknown {% endif %}
+        </span>
+      </div>
+      {% endif %}
+      <div class="php-status-note">Mode: {{ status_level|title }}</div>
+    </div>
+  </header>
+
+  {% if show_totals %}
+  <section class="php-metric-row">
+    <article class="php-metric metric-queries">
+      <span class="metric-label">Total DNS</span>
+      <strong class="metric-value">{{ '{:,}'.format(snapshot.total_queries or 0) }}</strong>
+      <small class="metric-note">24 hour volume</small>
+    </article>
+    <article class="php-metric metric-blocked">
+      <span class="metric-label">Blocked</span>
+      <strong class="metric-value">{{ '{:,}'.format(snapshot.blocked_queries or 0) }}</strong>
+      <small class="metric-note">{{ snapshot.blocked_percent or 0 }}% rate</small>
+    </article>
+    <article class="php-metric metric-clients">
+      <span class="metric-label">Clients</span>
+      <strong class="metric-value">{{ snapshot.unique_clients or 0 }}</strong>
+      <small class="metric-note">Active on network</small>
+    </article>
+    <article class="php-metric metric-rules">
+      <span class="metric-label">Blocklist</span>
+      <strong class="metric-value">{{ '{:,}'.format(snapshot.domains_on_blocklist or 0) }}</strong>
+      <small class="metric-note">Domains loaded</small>
+    </article>
+  </section>
+  {% endif %}
+
+  <section class="php-grid">
+    {% if show_chart %}
+    <article class="php-panel php-chart-panel">
+      <div class="php-panel-head">
+        <h2>Traffic strip</h2>
+        <span>Recent activity</span>
+      </div>
+
+      <div class="php-chart-shell">
+        {% for bar in snapshot.chart_bars %}
+        <div class="php-bar-slot {{ 'is-hot' if bar.is_hot else '' }}">
+          <div class="php-bar-total" style="height: {{ [bar.total_pct, 4] | max }}%"></div>
+          <div class="php-bar-blocked" style="height: {{ [bar.blocked_pct, 2] | max }}%"></div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="php-chart-legend">
+        <span class="legend-item"><i class="swatch swatch-info"></i>Total</span>
+        <span class="legend-item"><i class="swatch swatch-alert"></i>Blocked</span>
+        <span class="legend-item"><i class="swatch swatch-warn"></i>Hot</span>
+      </div>
+    </article>
+    {% endif %}
+
+    <div class="php-stack">
+      {% if show_destinations %}
+      <article class="php-panel php-destinations-panel">
+        <div class="php-panel-head">
+          <h2>Destinations</h2>
+          <span>Domains &amp; upstreams</span>
+        </div>
+        <div class="php-list php-service-list">
+          {% for item in snapshot.top_domains[:2] %}
+          <div class="php-row">
+            <span class="truncate"
+              >{% if mask_domains %}hidden-domain-{{ loop.index }}{% else %}{{ item.name }}{% endif %}</span
+            >
+            <strong>{{ '{:,}'.format(item.count) }}</strong>
+          </div>
+          {% endfor %} {% for item in snapshot.top_upstreams[:1] %}
+          <div class="php-row">
+            <span class="truncate">{{ item.name }}</span>
+            <strong>{{ '{:,}'.format(item.count) }}</strong>
+          </div>
+          {% endfor %}
+          <div class="php-row php-row-highlight">
+            <span>Block rate</span><strong>{{ snapshot.blocked_percent or 0 }}%</strong>
+          </div>
+        </div>
+      </article>
+      {% endif %} {% if show_clients %}
+      <article class="php-panel php-clients-panel">
+        <div class="php-panel-head">
+          <h2>Top clients</h2>
+          <span>Most active</span>
+        </div>
+        <div class="php-list">
+          {% for item in snapshot.top_clients %}
+          <div class="php-row">
+            <span class="truncate"
+              >{% if mask_client_names %}Client {{ loop.index }}{% else %}{{ item.name }}{% endif %}</span
+            >
+            <strong>{{ '{:,}'.format(item.count) }}</strong>
+          </div>
+          {% else %}
+          <div class="php-empty">No client activity available</div>
+          {% endfor %}
+        </div>
+      </article>
+      {% endif %} {% if show_queries %}
+      <article class="php-panel php-queries-panel">
+        <div class="php-panel-head">
+          <h2>Recent queries</h2>
+          <span>Latest sample</span>
+        </div>
+        <div class="php-list">
+          {% for item in snapshot.recent_queries %}
+          <div class="php-query-row">
+            <div class="php-query-copy">
+              <strong class="truncate"
+                >{% if mask_domains %}hidden-domain-{{ loop.index }}{% else %}{{ item.domain }}{% endif %}</strong
+              >
+              <span>{% if mask_client_names %}Client {{ loop.index }}{% else %}{{ item.client }}{% endif %}</span>
+            </div>
+            <em>{{ item.status }}</em>
+          </div>
+          {% else %}
+          <div class="php-empty">Query log unavailable</div>
+          {% endfor %}
+        </div>
+      </article>
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}
