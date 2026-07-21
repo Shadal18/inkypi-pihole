@@ -1,15 +1,15 @@
-# InkyPi Pi-hole Dashboard
+# InkyPi Pi-hole
 
 An plugin that shows Pi-hole status information on an InkyPi display with a clean, glanceable layout and configurable display fields.
 
-_Pi-hole Dashboard_ is a plugin for [InkyPi](https://github.com/fatihak/InkyPi) that displays DNS and blocking information from your Pi-hole setup.
+_Pi-hole_ is a plugin for [InkyPi](https://github.com/fatihak/InkyPi) that displays DNS and blocking information from your Pi-hole setup.
 
 ## Install
 
 Use the InkyPi plugin installer with the plugin ID and this repository URL, following the install pattern shown by the official InkyPi plugin template.
 
 ```bash
-inkypi plugin install pihole_dashboard [https://github.com/shadal18/inkypi-pihole](https://github.com/shadal18/inkypi-pihole)
+inkypi plugin install pihole [https://github.com/shadal18/inkypi-pihole](https://github.com/shadal18/inkypi-pihole)
 ```
 
 ## Update
@@ -19,14 +19,14 @@ To update the plugin on your InkyPi device:
 1. SSH into your InkyPi host.
 2. Change into the plugin directory:
    ```bash
-   cd ~/InkyPi/src/plugins/pihole_dashboard
+   cd ~/InkyPi/src/plugins/pihole
    ```
 3. Run this update command:
    ```bash
    git pull origin main && \
-   if [ -d pihole_dashboard ]; then \
-     rsync -a pihole_dashboard/ ./ && \
-     rm -rf pihole_dashboard; \
+   if [ -d pihole ]; then \
+     rsync -a pihole/ ./ && \
+     rm -rf pihole; \
    fi && \
    sudo systemctl restart inkypi.service
    ```
@@ -82,7 +82,7 @@ GitHub repository:
 
 ## Screenshots
 
-- Pi-hole Dashboard plugin.
+- Pi-hole plugin.
 - Settings.
 
 <p align="center">
