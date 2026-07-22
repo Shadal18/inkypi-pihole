@@ -9,7 +9,7 @@ _Pi-hole_ is a plugin for [InkyPi](https://github.com/fatihak/InkyPi) that displ
 Use the InkyPi plugin installer with the plugin ID and this repository URL, following the install pattern shown by the official InkyPi plugin template.
 
 ```bash
-inkypi plugin install pihole [https://github.com/shadal18/inkypi-pihole](https://github.com/shadal18/inkypi-pihole)
+inkypi install pihole https://github.com/shadal18/inkypi-pihole
 ```
 
 ## Update
